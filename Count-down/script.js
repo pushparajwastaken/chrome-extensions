@@ -8,12 +8,10 @@ function updateCountdown() {
   const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const minutes = Math.floor((diff / (1000 * 60)) % 60);
   const seconds = Math.floor((diff / 1000) % 60);
-  const ms = diff % 1000;
-
-  const text = `${days}d ${hours}h ${minutes}m ${seconds}s ${ms}ms`;
+  const text = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
   document.getElementById("countdown").textContent = text;
+  requestAnimationFrame(updateCountdown);
 }
 
-setInterval(updateCountdown, 10);
-updateCountdown();
+requestAnimationFrame(updateCountdown);
