@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Year End Countdown Wallpaper",
+  "name": "Year End Countdown",
   "version": "1.0",
   "description": "Shows a wallpaper with a countdown to the year-end on the new tab page.",
   "chrome_url_overrides": {
