@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YT Focus</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #272727;
+      --accent: #ff4444;
+      --accent2: #ff8c00;
+      --text: #f0f0f0;
+      --muted: #666;
+      --on: #3ddc84;
+      --radius: 10px;
+    }
+
+    body {
+      width: 300px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 20px 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(255,68,68,0.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .logo-icon {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .logo-text span {
+      color: var(--accent);
+    }
+
+    .tagline {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-left: 38px;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 20px;
+      background: rgba(61,220,132,0.06);
+      border-bottom: 1px solid var(--border);
+      font-size: 10px;
+      color: var(--on);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--on);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Toggles */
+    .toggles {
+      padding: 14px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+
+    .toggle-row:hover {
+      border-color: #3a3a3a;
+      background: #1a1a1a;
+    }
+
+    .toggle-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toggle-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .toggle-desc {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Switch */
+    .switch {
+      width: 40px; height: 22px;
+      background: #2a2a2a;
+      border-radius: 11px;
+      position: relative;
+      transition: background 0.25s;
+      flex-shrink: 0;
+      border: 1px solid #333;
+    }
+
+    .switch.on {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .switch::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    }
+
+    .switch.on::after {
+      transform: translateX(18px);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 10px 20px 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-note {
+      font-size: 9px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .reload-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .reload-btn:hover {
+      color: var(--text);
+      border-color: #444;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 12px; left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--on);
+      font-size: 10px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">▶</div>
+      <div class="logo-text">YT<span>Focus</span></div>
+    </div>
+    <div class="tagline">YouTube distraction blocker</div>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    Active on YouTube
+  </div>
+
+  <div class="toggles">
+
+    <div class="toggle-row" id="row-shorts">
+      <div class="toggle-info">
+        <div class="toggle-label">Hide Shorts</div>
+        <div class="toggle-desc">Removes Shorts from feed, sidebar & nav</div>
+      </div>
+      <div class="switch" id="switch-shorts"></div>
+    </div>
+
+    <div class="toggle-row" id="row-rec">
+      <div class="toggle-info">
+        <div class="toggle-label">Hide Recommendations</div>
+        <div class="toggle-desc">Hides "Up Next" sidebar while watching</div>
+      </div>
+      <div class="switch" id="switch-rec"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-note">Reload tab to apply</span>
+    <button class="reload-btn" id="reload-btn">↺ Reload Tab</button>
+  </div>
+
+  <div class="toast" id="toast">Settings saved</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

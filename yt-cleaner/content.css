@@ -1,0 +1,14 @@
+/* YT Focus — CSS safety net (hides elements before JS kicks in) */
+
+/* Shorts shelf rows in home feed */
+ytd-reel-shelf-renderer,
+ytd-reel-video-renderer {
+  display: none !important;
+}
+
+/* Individual videos that are Shorts (matched by JS, but CSS speeds it up) */
+ytd-rich-item-renderer:has(a[href*="/shorts/"]),
+ytd-video-renderer:has(a[href*="/shorts/"]),
+ytd-grid-video-renderer:has(a[href*="/shorts/"]) {
+  display: none !important;
+}
