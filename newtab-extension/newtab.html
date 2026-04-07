@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!--
+    Two fonts:
+    - "Instrument Serif" for the clock (elegant, editorial)
+    - "DM Sans" for all supporting UI text
+  -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Background layer ─────────────────────────────────── -->
+  <div id="bg" aria-hidden="true">
+    <!-- The <img> is injected by JS so we can control loading -->
+  </div>
+
+  <!-- Gradient overlay for readability (intensity toggled via class) -->
+  <div id="overlay" aria-hidden="true"></div>
+
+  <!-- ── Parallax container (subtle mouse-tracking) ────────── -->
+  <div id="parallax-wrap">
+
+    <!-- ── Main content ────────────────────────────────────── -->
+    <main id="content">
+
+      <!-- Clock -->
+      <section class="clock-block" aria-label="Current time">
+        <time id="clock" aria-live="polite">00:00:00</time>
+        <p id="date"></p>
+      </section>
+
+      <!-- Search -->
+      <section class="search-block" aria-label="Google Search">
+        <form id="search-form" action="https://www.google.com/search" method="GET" autocomplete="off">
+          <div class="search-wrap">
+            <!-- Magnifier icon -->
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+              <line x1="15.5" y1="15.5" x2="21" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input
+              id="search-input"
+              type="text"
+              name="q"
+              placeholder="Search Google…"
+              aria-label="Search Google"
+              spellcheck="false"
+            />
+          </div>
+        </form>
+      </section>
+
+    </main>
+
+  </div><!-- /parallax-wrap -->
+
+  <!-- ── Overlay intensity toggle ─────────────────────────── -->
+  <button
+    id="overlay-toggle"
+    class="control-btn"
+    aria-label="Toggle overlay intensity"
+    title="Toggle overlay intensity"
+  >
+    <!-- Half-circle icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3 A9 9 0 0 1 12 21 Z" fill="currentColor"/>
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+    </svg>
+  </button>
+
+  <!-- ── Wallpaper credit ──────────────────────────────────── -->
+  <p id="img-credit" aria-live="polite"></p>
+
+  <script src="script.js"></script>
+</body>
+</html>

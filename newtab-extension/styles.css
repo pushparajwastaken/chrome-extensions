@@ -1,0 +1,323 @@
+/* ═══════════════════════════════════════════════════════════
+   Lumina New Tab — styles.css
+   Adaptive theming via --text-* CSS variables set by JS.
+   All animations use CSS; JS only touches class/variable.
+═══════════════════════════════════════════════════════════ */
+
+/* ── Reset & root ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Defaults overridden by JS contrast detection */
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-shadow: 0 2px 24px rgba(0, 0, 0, 0.55);
+  --search-bg: rgba(255, 255, 255, 0.14);
+  --search-border: rgba(255, 255, 255, 0.28);
+  --search-focus: rgba(255, 255, 255, 0.22);
+  --search-text: rgba(255, 255, 255, 0.95);
+  --search-placeholder: rgba(255, 255, 255, 0.5);
+  --overlay-opacity: 0.38; /* default overlay strength */
+  --control-color: rgba(255, 255, 255, 0.7);
+
+  /* Parallax travel distance */
+  --px: 0px;
+  --py: 0px;
+
+  /* Font stacks */
+  --font-clock: "Instrument Serif", Georgia, serif;
+  --font-ui: "DM Sans", system-ui, sans-serif;
+}
+
+/* ── Body ───────────────────────────────────────────────── */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Background ─────────────────────────────────────────── */
+#bg {
+  position: fixed;
+  inset: -20px; /* slightly oversized for parallax travel */
+  z-index: 0;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+
+#bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 0;
+  /* GPU-composited fade-in; no layout reflow */
+  transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+#bg img.loaded {
+  opacity: 1;
+}
+
+/* ── Gradient overlay ───────────────────────────────────── */
+#overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  /* Cinematic dual-gradient: dark vignette + bottom lift */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0.18) 0%, transparent 70%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.52) 0%, transparent 55%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, transparent 40%);
+  opacity: var(--overlay-opacity);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Stronger overlay class */
+#overlay.strong {
+  --overlay-opacity: 0.72;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.3) 0%, transparent 80%),
+    linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 60%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, transparent 50%);
+}
+
+/* No overlay class */
+#overlay.minimal {
+  --overlay-opacity: 0.1;
+}
+
+/* ── Parallax wrapper ───────────────────────────────────── */
+#parallax-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Hardware-accelerated transform driven by CSS variables */
+  transform: translate(var(--px), var(--py));
+  transition: transform 0.12s linear;
+  will-change: transform;
+}
+
+/* ── Main content ───────────────────────────────────────── */
+#content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 24px;
+  /* Fade-in on load */
+  opacity: 0;
+  transform: translateY(10px);
+  animation: contentReveal 0.7s 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes contentReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Clock ──────────────────────────────────────────────── */
+.clock-block {
+  text-align: center;
+  user-select: none;
+}
+
+#clock {
+  display: block;
+  font-family: var(--font-clock);
+  font-size: clamp(4.5rem, 11vw, 9rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  text-shadow: var(--text-shadow);
+  line-height: 1;
+  /* Tabular nums so digits don't shift */
+  font-variant-numeric: tabular-nums;
+  transition:
+    color 0.5s ease,
+    text-shadow 0.5s ease;
+}
+
+#date {
+  margin-top: 10px;
+  font-family: var(--font-ui);
+  font-size: clamp(0.85rem, 1.6vw, 1.05rem);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-shadow: var(--text-shadow);
+  transition:
+    color 0.5s ease,
+    text-shadow 0.5s ease;
+}
+
+/* ── Search bar ─────────────────────────────────────────── */
+.search-block {
+  width: 100%;
+  max-width: 560px;
+}
+
+#search-form {
+  width: 100%;
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--search-text);
+  opacity: 0.7;
+  pointer-events: none;
+  transition:
+    color 0.5s ease,
+    opacity 0.3s ease;
+  flex-shrink: 0;
+}
+
+#search-input {
+  width: 100%;
+  padding: 15px 20px 15px 50px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--search-text);
+  background: var(--search-bg);
+  border: 1px solid var(--search-border);
+  border-radius: 40px;
+  outline: none;
+  cursor: text;
+  /* Glassmorphism */
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    color 0.5s ease;
+}
+
+#search-input::placeholder {
+  color: var(--search-placeholder);
+  transition: color 0.5s ease;
+}
+
+#search-input:focus {
+  background: var(--search-focus);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.08),
+    0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+#search-input:focus + .search-icon,
+.search-wrap:focus-within .search-icon {
+  opacity: 1;
+}
+
+/* Dark theme overrides when contrast detection sets .dark-ui */
+body.dark-ui {
+  --text-primary: rgba(15, 15, 15, 0.92);
+  --text-secondary: rgba(15, 15, 15, 0.6);
+  --text-shadow: 0 1px 12px rgba(255, 255, 255, 0.25);
+  --search-bg: rgba(0, 0, 0, 0.1);
+  --search-border: rgba(0, 0, 0, 0.22);
+  --search-focus: rgba(0, 0, 0, 0.15);
+  --search-text: rgba(10, 10, 10, 0.92);
+  --search-placeholder: rgba(20, 20, 20, 0.45);
+  --control-color: rgba(10, 10, 10, 0.65);
+}
+
+/* ── Controls ───────────────────────────────────────────── */
+.control-btn {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--control-color);
+  opacity: 0.6;
+  transition: none;
+}
+
+.control-btn:hover {
+  opacity: 1;
+}
+
+.control-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Wallpaper credit ───────────────────────────────────── */
+#img-credit {
+  position: fixed;
+  bottom: 14px;
+  left: 20px;
+  z-index: 10;
+  font-size: 0.68rem;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  opacity: 0.7;
+  transition: color 0.5s ease;
+  pointer-events: none;
+}
+
+/* ── Utility: no-transition during theme switch ─────────── */
+body.no-transition * {
+  transition: none !important;
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #bg img {
+    transition: none;
+  }
+  #content {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  #parallax-wrap {
+    transition: none;
+  }
+}
